@@ -8,7 +8,7 @@ import {
 } from "react-google-maps";
 import Geocode from "react-geocode";
 import Autocomplete from "react-google-autocomplete";
-Geocode.setApiKey("AIzaSyCSdo9_S01bcYEXTnnwx2xCqaHTkxIZ5ak");
+Geocode.setApiKey("AIzaSyA2z9wPZtKS9NkmFnAQSupuzt8qTbrpNf8");
 Geocode.enableDebug();
 
 class Map extends Component {
@@ -89,7 +89,7 @@ class Map extends Component {
     for (let i = 0; i < addressArray.length; i++) {
       if (
         addressArray[i].types[0] &&
-        "administrative_area_level_2" === addressArray[i].types[0]
+        "postal_town" === addressArray[i].types[0]
       ) {
         city = addressArray[i].long_name;
         return city;
@@ -213,11 +213,36 @@ class Map extends Component {
     });
   };
 
+  changeLocation = event => {
+    console.log("lol", event);
+    let newLat = event.latLng.lat(),
+      newLng = event.latLng.lng();
+
+    Geocode.fromLatLng(newLat, newLng).then(response => {
+      const address = response.results[0].formatted_address,
+        addressArray = response.results[0].address_components,
+        city = this.getCity(addressArray),
+        area = this.getArea(addressArray),
+        state = this.getState(addressArray);
+      this.setState({
+        address: address ? address : "",
+        area: area ? area : "",
+        city: city ? city : "",
+        state: state ? state : "",
+        markerPosition: {
+          lat: newLat,
+          lng: newLng
+        }
+      });
+    });
+  };
+
   render() {
     const AsyncMap = withScriptjs(
       withGoogleMap(props => (
         <GoogleMap
           google={this.props.google}
+          onClick={this.changeLocation}
           defaultZoom={this.props.zoom}
           defaultCenter={{
             lat: this.state.mapPosition.lat,
@@ -317,7 +342,7 @@ class Map extends Component {
           </div>
 
           <AsyncMap
-            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCSdo9_S01bcYEXTnnwx2xCqaHTkxIZ5ak&libraries=places"
+            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2z9wPZtKS9NkmFnAQSupuzt8qTbrpNf8&libraries=places"
             loadingElement={<div style={{ height: `100%` }} />}
             containerElement={<div style={{ height: this.props.height }} />}
             mapElement={<div style={{ height: `100%` }} />}
