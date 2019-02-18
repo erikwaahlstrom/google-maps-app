@@ -15,6 +15,7 @@ class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      saveAddress: [],
       address: "",
       city: "",
       area: "",
@@ -44,8 +45,6 @@ class Map extends Component {
           area = this.getArea(addressArray),
           state = this.getState(addressArray);
 
-        console.log("city", city, area, state);
-
         this.setState({
           address: address ? address : "",
           area: area ? area : "",
@@ -65,19 +64,19 @@ class Map extends Component {
    * @param nextState
    * @return {boolean}
    */
-  shouldComponentUpdate(nextProps, nextState) {
-    if (
-      this.state.markerPosition.lat !== this.props.center.lat ||
-      this.state.address !== nextState.address ||
-      this.state.city !== nextState.city ||
-      this.state.area !== nextState.area ||
-      this.state.state !== nextState.state
-    ) {
-      return true;
-    } else if (this.props.center.lat === nextProps.center.lat) {
-      return false;
-    }
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   if (
+  //     this.state.markerPosition.lat !== this.props.center.lat ||
+  //     this.state.address !== nextState.address ||
+  //     this.state.city !== nextState.city ||
+  //     this.state.area !== nextState.area ||
+  //     this.state.state !== nextState.state
+  //   ) {
+  //     return true;
+  //   } else if (this.props.center.lat === nextProps.center.lat) {
+  //     return false;
+  //   }
+  // }
   /**
    * Get the city and set the city input value to the one selected
    *
@@ -188,7 +187,6 @@ class Map extends Component {
    * @param place
    */
   onPlaceSelected = place => {
-    console.log("plc", place);
     const address = place.formatted_address,
       addressArray = place.address_components,
       city = this.getCity(addressArray),
@@ -214,7 +212,6 @@ class Map extends Component {
   };
 
   changeLocation = event => {
-    console.log("lol", event);
     let newLat = event.latLng.lat(),
       newLng = event.latLng.lng();
 
@@ -237,7 +234,18 @@ class Map extends Component {
     });
   };
 
+  saveLoc(e) {
+    e.preventDefault();
+    const { saveAddress } = this.state;
+    const newAddress = this.newAddress.value;
+
+    this.setState({
+      saveAddress: [...saveAddress, newAddress]
+    });
+  }
+
   render() {
+    const { saveAddress } = this.state;
     const AsyncMap = withScriptjs(
       withGoogleMap(props => (
         <GoogleMap
@@ -293,8 +301,13 @@ class Map extends Component {
     let map;
     if (this.props.center.lat !== undefined) {
       map = (
-        <div>
-          <div>
+        <>
+          <form
+            onSubmit={e => {
+              this.saveLoc(e);
+            }}
+          >
+            <button type="submit">Save</button>
             <div className="form-group">
               <label htmlFor="">City</label>
               <input
@@ -337,17 +350,36 @@ class Map extends Component {
                 onChange={this.onChange}
                 readOnly="readOnly"
                 value={this.state.address}
+                ref={input => (this.newAddress = input)}
               />
             </div>
+          </form>
+          <div className="flex-grid-wrapper">
+            <div className="flex-grid">
+              <div className="col">
+                <AsyncMap
+                  googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2z9wPZtKS9NkmFnAQSupuzt8qTbrpNf8&libraries=places"
+                  loadingElement={<div style={{ height: `100%` }} />}
+                  containerElement={
+                    <div style={{ height: this.props.height }} />
+                  }
+                  mapElement={<div style={{ height: `100%` }} />}
+                />
+              </div>
+              <div className="col2">
+                <ul>
+                  {saveAddress.map((item, i) => {
+                    return (
+                      <li key={i}>
+                        <button key={i}>{item}</button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
           </div>
-
-          <AsyncMap
-            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2z9wPZtKS9NkmFnAQSupuzt8qTbrpNf8&libraries=places"
-            loadingElement={<div style={{ height: `100%` }} />}
-            containerElement={<div style={{ height: this.props.height }} />}
-            mapElement={<div style={{ height: `100%` }} />}
-          />
-        </div>
+        </>
       );
     } else {
       map = <div style={{ height: this.props.height }} />;
