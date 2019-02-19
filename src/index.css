@@ -1,3 +1,22 @@
+@font-face {
+  font-family: "Circular Black";
+  src: url("fonts/circular/CircularStd-Black.otf") format("opentype");
+  src: url("fonts/circular/CircularStd-Black.eot");
+  src: url("fonts/circular/CircularStd-Black.eot?#iefix")
+      format("embedded-opentype"),
+    url("fonts/circular/CircularStd-Black.woff2") format("woff2"),
+    url("fonts/circular/CircularStd-Black.woff") format("woff");
+}
+@font-face {
+  font-family: "Circular Book";
+  src: url("fonts/circular/CircularStd-Book.otf") format("opentype");
+  src: url("fonts/circular/CircularStd-Book.eot");
+  src: url("fonts/circular/CircularStd-Book.eot?#iefix")
+      format("embedded-opentype"),
+    url("fonts/circular/CircularStd-Book.woff2") format("woff2"),
+    url("fonts/circular/CircularStd-Book.woff") format("woff");
+}
+
 * {
   box-sizing: border-box;
 }
@@ -6,14 +25,14 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: "Montserrat", sans-serif;
+  /* font-family: "Montserrat", sans-serif; */
+  font-family: "Circular Black";
   font-size: 16px;
   line-height: 1.3;
   background-color: #0394ff;
 }
 
 .flex-grid-wrapper {
-  border: 1px solid red;
   padding: 20px;
 }
 

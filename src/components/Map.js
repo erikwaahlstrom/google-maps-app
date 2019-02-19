@@ -244,6 +244,28 @@ class Map extends Component {
     });
   }
 
+  // When click on saved addresses list item
+  listItemClick = event => {
+    // const city = this.state.city,
+    //   area = this.state.area,
+    //   state = this.state.state;
+    // console.log(city, area, state);
+    // this.setState({
+    //   address: address ? address : "",
+    //   area: area ? area : "",
+    //   city: city ? city : "",
+    //   state: state ? state : ""
+    // markerPosition: {
+    //   lat: latValue,
+    //   lng: lngValue
+    // },
+    // mapPosition: {
+    //   lat: latValue,
+    //   lng: lngValue
+    // }
+    // });
+  };
+
   render() {
     const { saveAddress } = this.state;
     const AsyncMap = withScriptjs(
@@ -293,7 +315,8 @@ class Map extends Component {
               marginBottom: "100px"
             }}
             onPlaceSelected={this.onPlaceSelected}
-            types={["(regions)"]}
+            types={["establishment"]}
+            componentRestrictions={{ country: "SE" }}
           />
         </GoogleMap>
       ))
@@ -371,7 +394,14 @@ class Map extends Component {
                   {saveAddress.map((item, i) => {
                     return (
                       <li key={i}>
-                        <button key={i}>{item}</button>
+                        <button
+                          onClick={event => {
+                            this.listItemClick(event);
+                          }}
+                          key={i}
+                        >
+                          {item}
+                        </button>
                       </li>
                     );
                   })}
