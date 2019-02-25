@@ -30,9 +30,7 @@ class Map extends Component {
       }
     };
   }
-  /**
-   * Get the current address from the default map position and set those values in the state
-   */
+  /* Get the current address from the default map position and set those values in the state */
   componentDidMount() {
     Geocode.fromLatLng(
       this.state.mapPosition.lat,
@@ -57,32 +55,7 @@ class Map extends Component {
       }
     );
   }
-  /**
-   * Component should only update ( meaning re-render ), when the user selects the address, or drags the pin
-   *
-   * @param nextProps
-   * @param nextState
-   * @return {boolean}
-   */
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   if (
-  //     this.state.markerPosition.lat !== this.props.center.lat ||
-  //     this.state.address !== nextState.address ||
-  //     this.state.city !== nextState.city ||
-  //     this.state.area !== nextState.area ||
-  //     this.state.state !== nextState.state
-  //   ) {
-  //     return true;
-  //   } else if (this.props.center.lat === nextProps.center.lat) {
-  //     return false;
-  //   }
-  // }
-  /**
-   * Get the city and set the city input value to the one selected
-   *
-   * @param addressArray
-   * @return {string}
-   */
+  /* Get the city and set the city input value to the one selected */
   getCity = addressArray => {
     let city = "";
     for (let i = 0; i < addressArray.length; i++) {
@@ -95,12 +68,7 @@ class Map extends Component {
       }
     }
   };
-  /**
-   * Get the area and set the area input value to the one selected
-   *
-   * @param addressArray
-   * @return {string}
-   */
+  /* Get the area and set the area input value to the one selected */
   getArea = addressArray => {
     let area = "";
     for (let i = 0; i < addressArray.length; i++) {
@@ -117,12 +85,7 @@ class Map extends Component {
       }
     }
   };
-  /**
-   * Get the address and set the address input value to the one selected
-   *
-   * @param addressArray
-   * @return {string}
-   */
+  /* Get the address and set the address input value to the one selected */
   getState = addressArray => {
     let state = "";
     for (let i = 0; i < addressArray.length; i++) {
@@ -137,27 +100,14 @@ class Map extends Component {
       }
     }
   };
-  /**
-   * And function for city,state and address input
-   * @param event
-   */
+  /* And function for city,state and address input */
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
-  /**
-   * This Event triggers when the marker window is closed
-   *
-   * @param event
-   */
+  /* This Event triggers when the marker window is closed */
   onInfoWindowClose = event => {};
 
-  /**
-   * When the marker is dragged you get the lat and long using the functions available from event object.
-   * Use geocode to get the address, city, area and state from the lat and lng positions.
-   * And then set those values in the state.
-   *
-   * @param event
-   */
+  /* When the marker is dragged you get the lat and long using the functions available from event object. Use geocode to get the address, city, area and state from the lat and lng positions. And then set those values in the state. */
   onMarkerDragEnd = event => {
     let newLat = event.latLng.lat(),
       newLng = event.latLng.lng();
@@ -182,10 +132,7 @@ class Map extends Component {
     );
   };
 
-  /**
-   * When the user types an address in the search box
-   * @param place
-   */
+  /* When the user types an address in the search box */
   onPlaceSelected = place => {
     const address = place.formatted_address,
       addressArray = place.address_components,
@@ -194,7 +141,6 @@ class Map extends Component {
       state = this.getState(addressArray),
       latValue = place.geometry.location.lat(),
       lngValue = place.geometry.location.lng();
-    // Set these values in the state.
     this.setState({
       address: address ? address : "",
       area: area ? area : "",
@@ -210,7 +156,7 @@ class Map extends Component {
       }
     });
   };
-
+  /*  */
   changeLocation = event => {
     let newLat = event.latLng.lat(),
       newLng = event.latLng.lng();
@@ -234,7 +180,7 @@ class Map extends Component {
     });
   };
 
-  saveLoc(e) {
+  saveLocation(e) {
     e.preventDefault();
     const { saveAddress } = this.state;
     const newAddress = this.newAddress.value;
@@ -243,29 +189,9 @@ class Map extends Component {
       saveAddress: [...saveAddress, newAddress]
     });
   }
-
-  // When click on saved addresses list item
   listItemClick = event => {
-    // const city = this.state.city,
-    //   area = this.state.area,
-    //   state = this.state.state;
-    // console.log(city, area, state);
-    // this.setState({
-    //   address: address ? address : "",
-    //   area: area ? area : "",
-    //   city: city ? city : "",
-    //   state: state ? state : ""
-    // markerPosition: {
-    //   lat: latValue,
-    //   lng: lngValue
-    // },
-    // mapPosition: {
-    //   lat: latValue,
-    //   lng: lngValue
-    // }
-    // });
+    console.log("listItemClick");
   };
-
   render() {
     const { saveAddress } = this.state;
     const AsyncMap = withScriptjs(
@@ -279,7 +205,6 @@ class Map extends Component {
             lng: this.state.mapPosition.lng
           }}
         >
-          {/* InfoWindow on top of marker */}
           <InfoWindow
             onClose={this.onInfoWindowClose}
             position={{
@@ -293,7 +218,6 @@ class Map extends Component {
               </span>
             </div>
           </InfoWindow>
-          {/*Marker*/}
           <Marker
             google={this.props.google}
             name={"Dolores park"}
@@ -305,7 +229,6 @@ class Map extends Component {
             }}
           />
           <Marker />
-          {/* For Auto complete Search Box */}
           <Autocomplete
             style={{
               width: "100%",
@@ -327,7 +250,7 @@ class Map extends Component {
         <>
           <form
             onSubmit={e => {
-              this.saveLoc(e);
+              this.saveLocation(e);
             }}
           >
             <button type="submit">Save</button>
